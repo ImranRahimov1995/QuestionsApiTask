@@ -11,7 +11,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     #3rd-part:
     'psycopg2',
-
+    'rest_framework',
+    #my-apps
     'apps.quiz',
 ]
 
@@ -78,3 +79,4 @@ STATIC_ROOT = os.path.join(BASE_DIR,'static/')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media/')
+
