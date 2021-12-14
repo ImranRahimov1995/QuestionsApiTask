@@ -11,6 +11,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     #3rd-part:
     'psycopg2',
+
+    'apps.quiz',
 ]
 
 MIDDLEWARE = [
