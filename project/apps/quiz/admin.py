@@ -6,3 +6,10 @@ admin.site.register(Quiz)
 admin.site.register(Question)
 admin.site.register(Text)
 admin.site.register(MultipleChoose)
+admin.site.register(Answer)
+
+# class ModuleInline(admin.StackedInline):
+#     model = MultipleChoose
+
+# @admin.register(Q)
+# class QuestionAdmin(admin.ModelAdmin):
