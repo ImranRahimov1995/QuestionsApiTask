@@ -2,6 +2,10 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+
+SECRET_KEY = os.getenv('SECRET_KEY',
+                       'lc8tr(l91x8b5ts#$thna%aszd6-%f22*_sn(62so+sft1s%_e')
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
