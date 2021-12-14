@@ -53,14 +53,14 @@ class Question(models.Model):
     
 
 class Text(models.Model):
-    text = models.CharField(max_length=255)
+    text = models.CharField(max_length=255,blank=True,null=True)
 
     def __str__(self):
         return self.text
 
 class MultipleChoose(models.Model):
-    first = models.CharField(max_length=50)
-    second = models.CharField(max_length=50)
+    first = models.CharField(max_length=50,blank=True,null=True)
+    second = models.CharField(max_length=50,blank=True,null=True)
     third = models.CharField(max_length=50, blank=True, null=True)
     fourth = models.CharField(max_length=50, blank=True, null=True)
     fifth = models.CharField(max_length=50, blank=True, null=True)
