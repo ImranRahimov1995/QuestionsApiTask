@@ -14,7 +14,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ('quiz', 'body', 'multiple')
+        fields = ('body', 'multiple')
 
     def create(self, validated_data):
         multiple_options = validated_data.pop('multiple')
@@ -26,7 +26,7 @@ class QuestionSerializer(serializers.ModelSerializer):
             options = Text.objects.create(text=text)
 
         newQuestion = Question()
-        newQuestion.quiz = Quiz.objects.first()
+        newQuestion.quiz = validated_data['quiz']
         newQuestion.body = validated_data['body']
         newQuestion.content_type = ContentType.objects.get(
                                             app_label='quiz',
@@ -40,4 +40,4 @@ class QuestionSerializer(serializers.ModelSerializer):
 class QuizSerializer(serializers.ModelSerializer):
     class Meta:
         model = Quiz
-        fields = ('title',)
+        fields = '__all__'
