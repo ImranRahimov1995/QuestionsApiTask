@@ -76,8 +76,13 @@ class MultipleChoose(models.Model):
 
 class Answer(models.Model):
 
-    question = models.ForeignKey(Question,on_delete=models.CASCADE,related_name='answer')
-    user = models.ForeignKey(User,on_delete=models.CASCADE,related_name='my_answer')
+    question = models.ForeignKey(
+        Question,
+        on_delete=models.CASCADE,
+        related_name='answer'
+    )
+    user = models.ForeignKey(User,on_delete=models.CASCADE,
+                                  related_name='my_answer')
     selected = models.CharField(max_length=255)
     second_selected = models.CharField(max_length=255,blank=True,null=True)
     third_selected = models.CharField(max_length=255,blank=True,null=True)

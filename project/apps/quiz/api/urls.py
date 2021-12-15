@@ -5,8 +5,8 @@ from . import views
 
 
 urlpatterns = [
-    path('quizes/all/',views.QuizView.as_view()),
-    path('create/<str:quiz>/question',views.CreateQuestionView.as_view()),
+    path('create/quiz/',views.CreateQuizView.as_view()),
+    path('create/<str:quiz>/question/',views.CreateQuestionView.as_view()),
 ]
 
 
