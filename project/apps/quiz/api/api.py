@@ -74,6 +74,32 @@ class CreateQuizView(generics.ListCreateAPIView):
     queryset = Quiz.objects.all()
     permission_classes = [IsAdminUser]
 
-
+#_____For users
 class QuizListView(generics.ListAPIView):
-    pass
+    serializer_class = QuizSerializer
+    queryset = Quiz.objects.filter(end_date__gte=now)
+
+#
+# class QuestionsView(generics.ListCreateAPIView):
+#     serializer_class = UserQuizQuestionsSerializer
+#     queryset = Quiz.objects.all()
+#
+#
+#
+#     def list(self,request,title):
+#         quiz = Quiz.objects.filter(title=title).first()
+#         if not quiz:
+#             quiz = Quiz.objects.filter(title=title.capitalize()).first()
+#         queryset = Question.objects.filter(quiz=quiz)
+#
+#         serializer= self.get_serializer(queryset,many=True)
+#         serializers = [UserQuizQuestionsSerializer,AnswerSerializer]
+#         return Response(serializers)
+#
+#     def post(self,request,title):
+#         answer = request.data.get('answer')
+#         serializer = AnswerSerializer(data=answer)
+#         if serializer.is_valid():
+#             saved_answer = serializer.save()
+#         saved_answer = None
+#         return Response({'Success':'ok'})

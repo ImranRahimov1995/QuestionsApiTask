@@ -62,3 +62,26 @@ class QuizSerializer(serializers.ModelSerializer):
     class Meta:
         model = Quiz
         fields = '__all__'
+
+class AnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Answer
+        fields = '__all__'
+
+
+
+
+# class UserQuizQuestionsSerializer(serializers.ModelSerializer):
+#     options = serializers.StringRelatedField(read_only=True)
+#     answer = AnswerSerializer(many=True)
+#
+#
+#     class Meta:
+#         model = Question
+#         fields = ('pk','body','options','answer')
+
+
+
+class testSerializer(serializers.Serializer):
+    answer = AnswerSerializer(many=True)
+    quiz = QuizSerializer(many=True)
