@@ -18,10 +18,11 @@ class MultipleChooseSerializer(serializers.ModelSerializer):
 
 class QuestionSerializer(serializers.ModelSerializer):
     multiple = MultipleChooseSerializer(required=False, label='Options')
+    options = serializers.StringRelatedField(read_only=True)
 
     class Meta:
         model = Question
-        fields = ('body', 'multiple')
+        fields = ('pk', 'body', 'multiple', 'options')
 
     def create(self, validated_data):
         multiple_options = validated_data.pop('multiple')
@@ -36,12 +37,25 @@ class QuestionSerializer(serializers.ModelSerializer):
         newQuestion.quiz = validated_data['quiz']
         newQuestion.body = validated_data['body']
         newQuestion.content_type = ContentType.objects.get(
-                                            app_label='quiz',
-                                            model=options._meta.model_name)
+            app_label='quiz',
+            model=options._meta.model_name)
         newQuestion.object_id = options.pk
         newQuestion.save()
 
         return newQuestion
+
+    def update(self, instance, validated_data):
+        multiple_options = validated_data.pop('multiple')
+
+        if multiple_options['second'] != '':
+            options = MultipleChoose.objects.create(**multiple_options)
+        else:
+            text = multiple_options['first']
+            options = Text.objects.create(text=text)
+
+        instance.options = options
+        instance.save()
+        return super().update(instance, validated_data)
 
 
 class QuizSerializer(serializers.ModelSerializer):

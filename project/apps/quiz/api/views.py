@@ -6,17 +6,40 @@ from ..models import *
 from django.db.models import Q
 from rest_framework.exceptions import ValidationError
 from rest_framework import viewsets
+from django.utils import timezone
+
+now = timezone.now()
 
 
-class CreateQuestionView(generics.CreateAPIView):
+# Auth______________________________________
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+# End Auth_________________________________
+
+class CreateQuestionView(generics.ListCreateAPIView):
     serializer_class = QuestionSerializer
     queryset = Question.objects.all()
     permission_classes = [IsAdminUser]
 
-    def perform_create(self, serializer):
+    def get_queryset(self):
+        now = timezone.now()
         quiz = Quiz.objects.filter(
             Q(title=self.kwargs['quiz']) |
-            Q(title=self.kwargs['quiz'].capitalize())
+            Q(title=self.kwargs['quiz'].capitalize()) & Q(end_date__gte=now)
+
+        ).first()
+        queryset = Question.objects.filter(quiz=quiz)
+        return queryset
+
+    def perform_create(self, serializer):
+        now = timezone.now()
+        quiz = Quiz.objects.filter(
+            Q(title=self.kwargs['quiz']) |
+            Q(title=self.kwargs['quiz'].capitalize()) & Q(end_date__gte=now)
+
         ).first()
 
         if not quiz:
@@ -24,14 +47,33 @@ class CreateQuestionView(generics.CreateAPIView):
         serializer.save(quiz=quiz)
 
 
-class CreateQuizView(generics.CreateAPIView):
+class ChangeQuestionView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = QuestionSerializer
+    lookup_field = 'pk'
+    permission_classes = [IsAdminUser, ]
+
+    def get_queryset(self):
+        quiz = Quiz.objects.filter(
+            Q(title=self.kwargs['quiz']) |
+            Q(title=self.kwargs['quiz'].capitalize()) & Q(end_date__gte=now)
+
+        ).first()
+        queryset = Question.objects.filter(quiz=quiz)
+        return queryset
+
+
+class ChangeQuizView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = QuizSerializer
+    lookup_field = 'title'
+    permission_classes = [IsAdminUser, ]
+    queryset = Quiz.objects.filter(end_date__gte=now)
+
+
+class CreateQuizView(generics.ListCreateAPIView):
     serializer_class = QuizSerializer
     queryset = Quiz.objects.all()
     permission_classes = [IsAdminUser]
 
-#Auth______________________________________
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
 
-#End Auth_________________________________
+class QuizListView(generics.ListAPIView):
+    pass
