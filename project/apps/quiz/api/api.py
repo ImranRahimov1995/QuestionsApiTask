@@ -1,12 +1,12 @@
-from rest_framework import generics, views, permissions, status
-from rest_framework.response import Response
+from rest_framework import generics
 from rest_framework.permissions import IsAdminUser
-from .serializers import *
-from ..models import *
-from django.db.models import Q
 from rest_framework.exceptions import ValidationError
 from rest_framework import viewsets
+from django.db.models import Q
 from django.utils import timezone
+from .serializers import *
+from ..models import *
+
 
 now = timezone.now()
 
@@ -20,6 +20,7 @@ class UserViewSet(viewsets.ModelViewSet):
 # End Auth_________________________________
 
 class CreateQuestionView(generics.ListCreateAPIView):
+    """Обработчик для создание вопроса"""
     serializer_class = QuestionSerializer
     queryset = Question.objects.all()
     permission_classes = [IsAdminUser]
@@ -48,6 +49,8 @@ class CreateQuestionView(generics.ListCreateAPIView):
 
 
 class ChangeQuestionView(generics.RetrieveUpdateDestroyAPIView):
+    """Изменение конкретного вопроса из конкретного опроса"""
+
     serializer_class = QuestionSerializer
     lookup_field = 'pk'
     permission_classes = [IsAdminUser, ]

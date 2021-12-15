@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from ..models import *
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
+from ..models import *
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -79,4 +79,5 @@ class AnswerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Answer
-        fields = ('selected','second_selected','third_selected','question','user')
+        fields = ('selected','second_selected',
+                    'third_selected','question','user')
