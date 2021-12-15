@@ -5,6 +5,7 @@ from .serializers import *
 from ..models import *
 from django.db.models import Q
 from rest_framework.exceptions import ValidationError
+from rest_framework import viewsets
 
 
 class CreateQuestionView(generics.CreateAPIView):
@@ -27,3 +28,10 @@ class CreateQuizView(generics.CreateAPIView):
     serializer_class = QuizSerializer
     queryset = Quiz.objects.all()
     permission_classes = [IsAdminUser]
+
+#Auth______________________________________
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+#End Auth_________________________________
