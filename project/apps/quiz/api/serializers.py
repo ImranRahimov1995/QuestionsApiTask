@@ -17,15 +17,15 @@ class MultipleChooseSerializer(serializers.ModelSerializer):
 
 
 class QuestionSerializer(serializers.ModelSerializer):
-    multiple = MultipleChooseSerializer(required=False, label='Options')
+    multiple_options = MultipleChooseSerializer(required=False, label='Options')
     options = serializers.StringRelatedField(read_only=True)
 
     class Meta:
         model = Question
-        fields = ('pk', 'body', 'multiple', 'options')
+        fields = ('pk', 'body', 'multiple_options', 'options')
 
     def create(self, validated_data):
-        multiple_options = validated_data.pop('multiple')
+        multiple_options = validated_data.pop('multiple_options')
 
         if multiple_options['second'] != '':
             options = MultipleChoose.objects.create(**multiple_options)
@@ -45,7 +45,7 @@ class QuestionSerializer(serializers.ModelSerializer):
         return newQuestion
 
     def update(self, instance, validated_data):
-        multiple_options = validated_data.pop('multiple')
+        multiple_options = validated_data.pop('multiple_options')
         counter = 0        
         one_field = []
         for k in multiple_options.keys():
