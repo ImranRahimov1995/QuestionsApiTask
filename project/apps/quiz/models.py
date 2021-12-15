@@ -80,7 +80,7 @@ class Answer(models.Model):
         related_name='answer'
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE,
-                             related_name='my_answer')
+                             related_name='my_answer',blank=True,null=True)
     selected = models.CharField(max_length=255)
     second_selected = models.CharField(max_length=255, blank=True, null=True)
     third_selected = models.CharField(max_length=255, blank=True, null=True)

@@ -21,6 +21,9 @@ urlpatterns = [
     #For users,get all active()
     path('quiz/all/',api.QuizListView.as_view()),
     path('quiz/<str:title>/', api.QuestionsView.as_view()),
+    path('<quiz>/<pk>/create/answer/',api.AnswerCreateView.as_view()),
+    path('<user_id>/<quiz>/answers/',api.UserQuizAnswerView.as_view()),
+    path('<quiz>/answers/',api.QuizAllAnswersView.as_view()),
 ]
 
 

@@ -66,7 +66,7 @@ class ChangeQuizView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = QuizSerializer
     lookup_field = 'title'
     permission_classes = [IsAdminUser, ]
-    queryset = Quiz.objects.filter(end_date__gte=now)
+    queryset = Quiz.objects.all()
 
 
 class CreateQuizView(generics.ListCreateAPIView):
@@ -76,30 +76,60 @@ class CreateQuizView(generics.ListCreateAPIView):
 
 #_____For users
 class QuizListView(generics.ListAPIView):
+    """Get all active quiz for now """
     serializer_class = QuizSerializer
     queryset = Quiz.objects.filter(end_date__gte=now)
 
-#
-# class QuestionsView(generics.ListCreateAPIView):
-#     serializer_class = UserQuizQuestionsSerializer
-#     queryset = Quiz.objects.all()
-#
-#
-#
-#     def list(self,request,title):
-#         quiz = Quiz.objects.filter(title=title).first()
-#         if not quiz:
-#             quiz = Quiz.objects.filter(title=title.capitalize()).first()
-#         queryset = Question.objects.filter(quiz=quiz)
-#
-#         serializer= self.get_serializer(queryset,many=True)
-#         serializers = [UserQuizQuestionsSerializer,AnswerSerializer]
-#         return Response(serializers)
-#
-#     def post(self,request,title):
-#         answer = request.data.get('answer')
-#         serializer = AnswerSerializer(data=answer)
-#         if serializer.is_valid():
-#             saved_answer = serializer.save()
-#         saved_answer = None
-#         return Response({'Success':'ok'})
+class QuestionsView(generics.ListAPIView):
+    """Get all quiz question"""
+    serializer_class = QuestionSerializer
+    queryset = Quiz.objects.filter(end_date__gte=now)
+
+    def get_queryset(self):
+        quiz = Quiz.objects.filter(
+            Q(title=self.kwargs['title']) |
+            Q(title=self.kwargs['title'].capitalize()) & Q(end_date__gte=now)
+        ).first()
+        queryset = Question.objects.filter(quiz=quiz)
+        return queryset
+
+class UserQuizAnswerView(generics.ListAPIView):
+    """Get user quiz answers"""
+    serializer_class = AnswerSerializer
+
+    def get_queryset(self):
+        quiz = Quiz.objects.filter(
+            title=self.kwargs['quiz']
+        ).first()
+        user = User.objects.filter(pk=self.kwargs['user_id']).first()
+        if user:
+            queryset = user.my_answer.filter(question__quiz=quiz)
+            return queryset
+        else:
+            raise ValidationError("User id isn't correct")
+
+
+
+class AnswerCreateView(generics.CreateAPIView):
+    serializer_class = AnswerSerializer
+    queryset = Answer.objects.all()
+
+    def perform_create(self, serializer):
+        question = Question.objects.filter(pk=self.kwargs['pk']).first()
+        if not question:
+            raise ValidationError('Question does not exists')
+        user = self.request.user
+        if user.is_authenticated:
+             serializer.save(question=question,user=user)
+        serializer.save(question=question)
+
+class QuizAllAnswersView(generics.ListAPIView):
+    """Get user quiz answers"""
+    serializer_class = AnswerSerializer
+
+    def get_queryset(self):
+        quiz = Quiz.objects.filter(
+            title=self.kwargs['quiz']
+        ).first()
+        queryset = Answer.objects.filter(question__quiz=quiz)
+        return queryset
