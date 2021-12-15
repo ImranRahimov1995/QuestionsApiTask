@@ -84,8 +84,8 @@ class Answer(models.Model):
 
     def __str__(self):
         if self.second_selected or self.third_selected:
-            return f'A. {self.selected} \
+            return f'{self.question.body} --A. {self.selected} \
                      B. {self.second_selected} \
                      C. {self.third_selected} '
         
-        return self.selected
+        return '{}--{}'.format(self.question.body,self.selected)

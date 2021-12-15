@@ -8,8 +8,3 @@ admin.site.register(Text)
 admin.site.register(MultipleChoose)
 admin.site.register(Answer)
 
-# class ModuleInline(admin.StackedInline):
-#     model = MultipleChoose
-
-# @admin.register(Q)
-# class QuestionAdmin(admin.ModelAdmin):

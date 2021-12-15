@@ -1,6 +1,6 @@
 from rest_framework import generics ,views,permissions,status
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAdminUser
 from .serializers import *
 from ..models import *
 
@@ -19,7 +19,5 @@ class QuizView(views.APIView):
 class CreateQuestionView(generics.CreateAPIView):
     serializer_class = QuestionSerializer
     queryset = Question.objects.all()
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
 
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
