@@ -9,7 +9,7 @@ ________________________________________________________
 2. Заходите в docker-compose.yaml если нужно изменить окружение . есть две настройки окружение : local с включенным renderbrowsableApi, и Sqlite3.
 Есть также prod настройки c jsonrender, postgres.
 
-4. docker-commpose buiild
+4. docker-compose build
 5. docker-compose up 
 ___________________________________
 ### Документация по приминению ,примеры :
